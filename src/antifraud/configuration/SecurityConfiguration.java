@@ -21,17 +21,17 @@ public class SecurityConfiguration {
         return http
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions().disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .sessionManagement(session -> session.
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/actuator/shutdown").permitAll()
                         .requestMatchers(POST, "/api/auth/user").permitAll()
-                        .requestMatchers(GET, "/api/auth/list")
-                        .hasAnyRole("ADMINISTRATOR", "SUPPORT")
+                        .requestMatchers("/actuator/shutdown").permitAll()
+                        .requestMatchers(GET, "/api/auth/list").hasAnyRole("ADMINISTRATOR", "SUPPORT")
+                        .requestMatchers(POST, "/api/antifraud/transaction").hasRole("MERCHANT")
+                        .requestMatchers("/api/antifraud/stolencard", "/api/antifraud/stolencard/**").hasRole("SUPPORT")
+                        .requestMatchers("/api/antifraud/suspicious-ip", "/api/antifraud/suspicious-ip/**").hasRole("SUPPORT")
                         .requestMatchers("/api/auth/**").hasRole("ADMINISTRATOR")
-                        .requestMatchers(POST, "/api/antifraud/transaction")
-                        .hasRole("MERCHANT")
                         .anyRequest().authenticated())
                 .build();
     }

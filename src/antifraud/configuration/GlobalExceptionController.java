@@ -22,11 +22,25 @@ public class GlobalExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        System.out.println("[DEBUG_LOG] MethodArgumentNotValidException");
+        return ResponseEntity.status(400).body("Bad Request");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        System.out.println("[DEBUG_LOG] IllegalArgumentException");
+        return ResponseEntity.status(400).body("Bad Request");
+    }
+
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException e) {
+        System.out.println("[DEBUG_LOG] HttpMessageNotReadableException");
+        return ResponseEntity.status(400).body("Bad Request");
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleAll(Exception e) {
+        System.out.println("[DEBUG_LOG] Exception: " + e.getClass().getName());
+        return ResponseEntity.status(400).body("Bad Request");
     }
 }

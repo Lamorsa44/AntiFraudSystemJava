@@ -1,9 +1,6 @@
 package antifraud.controller;
 
-import antifraud.entity.user.MaiUserRequest;
-import antifraud.entity.user.MaiUserResponse;
-import antifraud.entity.user.RoleRequest;
-import antifraud.entity.user.UserDeleteResponse;
+import antifraud.entity.user.*;
 import antifraud.service.MaiUserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -35,6 +32,11 @@ public class UserController {
     @PutMapping("/role")
     public MaiUserResponse updateRole(@RequestBody @Valid RoleRequest request) {
         return maiUserService.updateRole(request);
+    }
+
+    @PutMapping("/access")
+    public LockingResponse lockUser(@RequestBody @Valid LockingRequest request) {
+        return maiUserService.lockUser(request);
     }
 
     @DeleteMapping("/user/{username}")

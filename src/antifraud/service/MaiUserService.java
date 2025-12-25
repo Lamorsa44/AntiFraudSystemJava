@@ -9,10 +9,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @Service
+@Validated
 public class MaiUserService implements UserDetailsService {
 
     private final MaiUserRepository maiUserRepository;
@@ -35,11 +37,6 @@ public class MaiUserService implements UserDetailsService {
         } else {
             return maiUserRepository.save(request.encode(passwordEncoder, Role.ROLE_MERCHANT));
         }
-    }
-
-    public MaiUser findById(long id) {
-        return maiUserRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(id));
     }
 
     private MaiUser getUserByUsername(String username) {
@@ -76,6 +73,7 @@ public class MaiUserService implements UserDetailsService {
             throw new IllegalArgumentException("Cannot lock admin user");
         }
         user.setLock(request.getOperation());
+        maiUserRepository.save(user);
         return new LockingResponse(user);
     }
 
